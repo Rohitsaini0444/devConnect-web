@@ -22,7 +22,7 @@ const NavBar = () => {
 
     return (
 
-        <div className="navbar bg-base-300 shadow-sm">
+        <div className="navbar fixed top-0 inset-x-0 z-50 flex position-shrink-0 bg-base-300 shadow-sm">
             <div className="flex-1">
                 <a className="btn btn-ghost text-xl">🧑‍💻DeveloperConnect</a>
             </div>

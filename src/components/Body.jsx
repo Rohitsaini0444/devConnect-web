@@ -31,9 +31,11 @@ const Body = () => {
   }, []);
 
   return (
-    <div>
+    <div className="pt-16">
       <NavBar />
+      <main className="overflow-y-auto">
       <Outlet />
+      </main>
       <Footer />
     </div>
   )
