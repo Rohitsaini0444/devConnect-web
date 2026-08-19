@@ -65,16 +65,16 @@ const EditProfile = ({ user }) => {
                                 <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="input" placeholder="First Name" />
                                 <label className="label">Last Name</label>
                                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="input" placeholder="Last Name" />
-                                <label className="label">About</label>
-                                <input type="text" value={about} onChange={(e) => setAbout(e.target.value)} className="input" placeholder="About" />
-                                <label className="label">Photo URL</label>
-                                <input type="text" value={photoURL} onChange={(e) => setPhotoURL(e.target.value)} className="input" placeholder="Photo URL" />
-                                <label className="label">Skills (comma-separated)</label>
-                                <input type="text" value={skills.join(', ')} onChange={(e) => setSkills(e.target.value.split(',').map((s) => s.trim()))} className="input" placeholder="Skills" />
                                 <label className="label">Age</label>
                                 <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="input" placeholder="Age" />
                                 <label className="label">Gender</label>
                                 <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} className="input" placeholder="Gender" />
+                                 <label className="label">Photo URL</label>
+                                <input type="text" value={photoURL} onChange={(e) => setPhotoURL(e.target.value)} className="input" placeholder="Photo URL" />
+                                <label className="label">Skills (comma-separated)</label>
+                                <input type="text" value={skills.join(', ')} onChange={(e) => setSkills(e.target.value.split(',').map((s) => s.trim()))} className="input" placeholder="Skills" />
+                                <label className="label">About</label>
+                                <textarea value={about} onChange={(e) => setAbout(e.target.value)} className="textarea" placeholder="About" />
                                 {error && <p className="text-red-500">{error}</p>}
                                 <button className="btn btn-primary mt-4" onClick={handleUpdateProfile}>
                                     Update Profile
