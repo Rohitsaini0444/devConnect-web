@@ -1,0 +1,60 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { BASE_URL } from '../utils/constants';
+import axios from 'axios';
+import { setRequests } from '../utils/requestsSlice';
+
+const Requests = () => {
+    const requests = useSelector((state) => state.requests);
+    const dispatch = useDispatch();
+    const fetchRequests = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/user/requests/received`, { withCredentials: true });
+            const requestsData = await response?.data?.data;
+            console.log('Fetched requests data:', requestsData);
+            dispatch(setRequests(requestsData));
+        }
+        catch (error) {
+            console.error('Error fetching requests data:', error);
+        }
+    };
+    useEffect(() => {
+        if (!requests || requests.length === 0) {
+            fetchRequests();
+        }
+    }, []);
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
+            <p className="text-3xl font-bold">Requests</p>
+            {requests && requests.length > 0 ?
+                requests.map((request) => (
+                    <div key={request._id} className="flex  bg-base-100 shadow-xl">
+                        <div>
+                            <img
+                                className="w-24 h-24 rounded-full mx-auto mt-4"
+                                alt="Profile photo"
+                                src={request?.fromUserId?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                            />
+                        </div>
+                        <div className="card-body">
+                            <h4 className="card-title">
+                                {request?.fromUserId?.firstName} {request?.fromUserId?.lastName}
+                            </h4>
+                            <p>{request?.fromUserId?.age || "N/A"} {request?.fromUserId?.gender || "N/A"}</p>
+                            {/* <p>Skills: {request?.fromUserId?.skills?.join(', ') || "N/A"}</p>
+                            <p>Bio: {request?.fromUserId?.about || ""}</p> */}
+
+                        </div>
+                        <div className="flex card-actions m-4">
+                            <button className="btn btn-primary self-center">Accept</button>
+                            <button className="btn btn-secondary self-center ml-2">Decline</button>
+                        </div>
+                    </div>
+                )) : (
+                    <p>No requests found.</p>
+                )}
+        </div>
+    )
+}
+
+export default Requests
