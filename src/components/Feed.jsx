@@ -25,10 +25,10 @@ const Feed = () => {
 
   return (
     < >
-      <h1 className="text-2xl text-center font-bold my-4">Feed</h1>
+      <h1 className="text-2xl text-center font-bold">Feed</h1>
       <div className="flex flex-col p-4 items-center">
           {feed.map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCard key={user._id} user={user} />
           ))}
       </div>
     </>
