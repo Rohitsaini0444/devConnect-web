@@ -23,13 +23,22 @@ const Feed = () => {
     fetchFeed();
   }, []);
 
+  if (!feed || feed.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
+        <p className="text-3xl font-bold">No users found in the feed.</p>
+      </div>
+    );
+  }
+
   return (
     < >
       <h1 className="text-2xl text-center font-bold">Feed</h1>
       <div className="flex flex-col p-4 items-center">
-          {feed.map((user) => (
+        <UserCard user={{ ...feed[0], showButtons: true }} />
+        {/* {feed.map((user) => (
             <UserCard key={user._id} user={user} />
-          ))}
+          ))} */}
       </div>
     </>
   )
