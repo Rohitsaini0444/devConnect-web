@@ -2,11 +2,23 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { BASE_URL } from '../utils/constants';
 import axios from 'axios';
-import { setRequests } from '../utils/requestsSlice';
+import { setRequests,removeRequest } from '../utils/requestsSlice';
 
 const Requests = () => {
     const requests = useSelector((state) => state.requests);
     const dispatch = useDispatch();
+
+    const reviewRequest = async (requestId, action) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/request/review/${action}/${requestId}`, {}, { withCredentials: true });
+            console.log(`Request ${action}ed successfully`, response.data);
+            // Remove the request from the state after accepting or declining
+            dispatch(removeRequest(requestId));
+        }   catch (error) {
+            console.error(`Error ${action}ing request:`, error);
+        }
+    };
+
     const fetchRequests = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/user/requests/received`, { withCredentials: true });
@@ -46,8 +58,8 @@ const Requests = () => {
 
                         </div>
                         <div className="flex card-actions m-4">
-                            <button className="btn btn-primary self-center">Accept</button>
-                            <button className="btn btn-secondary self-center ml-2">Decline</button>
+                            <button className="btn btn-primary self-center" onClick={() => reviewRequest(request._id, 'accepted')}>Accept</button>
+                            <button className="btn btn-secondary self-center ml-2" onClick={() => reviewRequest(request._id, 'rejected')}>Decline</button>
                         </div>
                     </div>
                 )) : (
