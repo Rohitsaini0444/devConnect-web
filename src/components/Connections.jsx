@@ -34,17 +34,17 @@ const Connections = () => {
                             <img
                                 className="w-24 h-24 rounded-full mx-auto mt-4"
                                 alt="Profile photo"
-                                src={connection?.fromUserId?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                                src={connection?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
                             />
                         </div>
                         <div className="card-body">
                             <h2 className="card-title">
-                                {connection?.fromUserId?.firstName} {connection?.fromUserId?.lastName}
+                                {connection?.firstName} {connection?.lastName}
                             </h2>
-                            <p>Age: {connection?.fromUserId?.age || "N/A"}</p>
-                            <p>Gender: {connection?.fromUserId?.gender || "N/A"}</p>
-                            <p>Skills: {connection?.fromUserId?.skills?.join(', ') || "N/A"}</p>
-                            <p>Bio: {connection?.fromUserId?.about || ""}</p>
+                            <p>Age: {connection?.age || "N/A"}</p>
+                            <p>Gender: {connection?.gender || "N/A"}</p>
+                            <p>Skills: {connection?.skills?.join(', ') || "N/A"}</p>
+                            <p>Bio: {connection?.about || ""}</p>
                         </div>
                     </div>
                 )) : (
