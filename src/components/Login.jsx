@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
-  const [email, setEmail] = useState('rohit.sharma@gmail.com')
-  const [password, setPassword] = useState('Rohit@123')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [error, setError] = useState(null)
@@ -53,6 +53,7 @@ const Login = () => {
       <div className="card card-border bg-base-100 w-96">
         <div className="card-body items-center text-center">
           <h2 className="card-title">{isLoginForm ? 'Login' : 'Sign Up'}</h2>
+           {error && <p className="text-red-500">{error}</p>}
           <div className="card-actions justify-center">
             {!isLoginForm && (<>
               <label className="input validator">
@@ -147,7 +148,6 @@ const Login = () => {
               Must be more than 8 characters, including
               <br />At least one number <br />At least one lowercase letter <br />At least one uppercase letter
             </p>
-            <p className="text-red-500">{error}</p>
             <button className="btn btn-primary" onClick={isLoginForm ? handleLogin : handleRegister}>
              {isLoginForm ? 'Login' : 'Sign Up'}
             </button>
