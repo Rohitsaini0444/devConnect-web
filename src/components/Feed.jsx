@@ -25,20 +25,33 @@ const Feed = () => {
 
   if (!feed || feed.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
-        <p className="text-3xl font-bold">No users found in the feed.</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-slate-900 via-purple-900/30 to-slate-900 px-4 pt-24">
+        <div className="text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 mx-auto mb-6 text-purple-400/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          </svg>
+          <p className="text-3xl font-bold text-purple-300 mb-3">No Users Available</p>
+          <p className="text-slate-400 text-lg">Check back later for more developers to connect with!</p>
+        </div>
       </div>
     );
   }
 
   return (
-    < >
-      <h1 className="text-2xl text-center font-bold">Feed</h1>
-      <div className="flex flex-col p-4 items-center">
-        <UserCard user={{ ...feed[0], showButtons: true }} />
-        {/* {feed.map((user) => (
-            <UserCard key={user._id} user={user} />
-          ))} */}
+    <>
+      <div className="min-h-screen bg-linear-to-b from-slate-900 via-purple-900/30 to-slate-900 py-8 px-4 pt-24">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Discover Developers</h1>
+            <p className="text-slate-400 text-lg">Explore profiles and connect with like-minded developers</p>
+          </div>
+
+          {/* User Card */}
+          <div className="flex flex-col items-center justify-center">
+            <UserCard user={{ ...feed[0], showButtons: true }} />
+          </div>
+        </div>
       </div>
     </>
   )

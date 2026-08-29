@@ -31,10 +31,10 @@ const Body = () => {
   }, []);
 
   return (
-    <div className="pt-16">
+    <div className="flex flex-col min-h-screen">
       <NavBar />
-      <main className="overflow-y-auto">
-      <Outlet />
+      <main className="grow mt-16">
+        <Outlet />
       </main>
       <Footer />
     </div>
