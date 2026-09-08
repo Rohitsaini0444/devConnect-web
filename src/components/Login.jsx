@@ -7,8 +7,8 @@ import { BASE_URL } from '../utils/constants';
 import { validateLoginForm, validateSignupForm } from '../utils/validators';
 
 const Login = () => {
-  const [email, setEmail] = useState('jack.s@gmail.com')
-  const [password, setPassword] = useState('Jack@123')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [error, setError] = useState(null)

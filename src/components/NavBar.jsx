@@ -10,13 +10,14 @@ const NavBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            axios.post(`${BASE_URL}/auth/logout`, {}, { withCredentials: true });
-            dispatch(setUser(null));
-            navigate('/login');
+            await axios.post(`${BASE_URL}/auth/logout`, {}, { withCredentials: true });
         } catch (error) {
             console.error('Logout failed:', error);
+        } finally {
+            dispatch(setUser(null));
+            navigate('/login');
         }
     }
 
@@ -47,7 +48,7 @@ const NavBar = () => {
                         </Link>
                         <Link to="/requests" className="btn btn-sm btn-ghost hover:bg-blue-700/50 hover:text-blue-300 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M15 14c2.67 0 8 1.34 8 4v2H7v-2c0-2.66 5.33-4 8-4zm0-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM6 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 7.75c-1.38 0-3.47.26-4.99.7.519 1.71 2.47 2.55 4.99 2.55s4.48-.84 5-2.55c-1.52-.44-3.61-.7-5--.7z" />
+                                <path d="M15 14c2.67 0 8 1.34 8 4v2H7v-2c0-2.66 5.33-4 8-4zm0-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM6 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 7.75c-1.38 0-3.47.26-4.99.7.519 1.71 2.47 2.55 4.99 2.55s4.48-.84 5-2.55c-1.52-.44-3.61-.7-5 -.7z" />
                             </svg>
                             Requests
                         </Link>
@@ -102,7 +103,7 @@ const NavBar = () => {
                                 <Link to="/requests" className="flex justify-between hover:bg-blue-700/50">
                                     Requests
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M15 14c2.67 0 8 1.34 8 4v2H7v-2c0-2.66 5.33-4 8-4zm0-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM6 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 7.75c-1.38 0-3.47.26-4.99.7.519 1.71 2.47 2.55 4.99 2.55s4.48-.84 5-2.55c-1.52-.44-3.61-.7-5--.7z" />
+                                        <path d="M15 14c2.67 0 8 1.34 8 4v2H7v-2c0-2.66 5.33-4 8-4zm0-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM6 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 7.75c-1.38 0-3.47.26-4.99.7.519 1.71 2.47 2.55 4.99 2.55s4.48-.84 5-2.55c-1.52-.44-3.61-.7-5 -.7z" />
                                     </svg>
                                 </Link>
                             </li>
@@ -118,12 +119,12 @@ const NavBar = () => {
                                 <hr className="my-2 border-purple-600" />
                             </li>
                             <li>
-                                <a onClick={handleLogout} className="text-red-500 flex justify-between hover:bg-red-700/30">
+                                <button type="button" onClick={handleLogout} className="text-red-500 flex justify-between hover:bg-red-700/30 w-full">
                                     Logout
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </div>
