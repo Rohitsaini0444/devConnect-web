@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "https://rohitsdev.com/api";
 export const PREMIUM_PLANS = [
     {
         name: "Silver",
