@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserCard from './UserCard';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
@@ -10,7 +10,9 @@ const EditProfile = ({ user }) => {
     const [firstName, setFirstName] = useState(user?.firstName || '');
     const [lastName, setLastName] = useState(user?.lastName || '');
     const [about, setAbout] = useState(user?.about || '');
-    const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
+    const [photoURL] = useState(user?.photoURL || '');
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(user?.photoURL || '');
     const [skills, setSkills] = useState(user?.skills || []);
     const [age, setAge] = useState(user?.age || '');
     const [gender, setGender] = useState(user?.gender || '');
@@ -20,6 +22,36 @@ const EditProfile = ({ user }) => {
     const [touched, setTouched] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        return () => {
+            if (photoPreview.startsWith('blob:')) {
+                URL.revokeObjectURL(photoPreview);
+            }
+        };
+    }, [photoPreview]);
+
+    const handlePhotoChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            setError('Please choose a JPG, PNG, WEBP, or GIF image');
+            event.target.value = '';
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Profile photo must be smaller than 5 MB');
+            event.target.value = '';
+            return;
+        }
+
+        setError(null);
+        setPhotoFile(file);
+        setPhotoPreview(URL.createObjectURL(file));
+    };
 
     const handleBlur = (fieldName) => {
         setTouched({ ...touched, [fieldName]: true });
@@ -83,11 +115,27 @@ const EditProfile = ({ user }) => {
 
         setIsLoading(true);
         try {
+            let uploadedPhotoURL = photoURL;
+
+            if (photoFile) {
+                const uploadResponse = await axios.post(
+                    `${BASE_URL}/profile/photo/upload-url`,
+                    { contentType: photoFile.type },
+                    { withCredentials: true }
+                );
+
+                await axios.put(uploadResponse.data.uploadUrl, photoFile, {
+                    headers: { 'Content-Type': photoFile.type }
+                });
+
+                uploadedPhotoURL = uploadResponse.data.photoUrl;
+            }
+
             const res = await axios.post(`${BASE_URL}/profile/edit`, {
                 firstName,
                 lastName,
                 about,
-                photoURL,
+                photoURL: uploadedPhotoURL,
                 skills,
                 age: age ? parseInt(age, 10) : undefined,
                 gender
@@ -144,7 +192,7 @@ const EditProfile = ({ user }) => {
                                             lastName,
                                             age,
                                             gender,
-                                            photoURL,
+                                            photoURL: photoPreview,
                                             about,
                                             skills,
                                             showButtons: false
@@ -280,28 +328,26 @@ const EditProfile = ({ user }) => {
                                 <div>
                                     <label className="form-control w-full">
                                         <div className="label">
-                                            <span className="label-text text-yellow-300 font-semibold">Photo URL</span>
-                                            {touched.photoURL && validationErrors.photoURL && (
-                                                <span className="label-text-alt text-red-400 text-xs">
-                                                    {validationErrors.photoURL}
-                                                </span>
-                                            )}
+                                            <span className="label-text text-yellow-300 font-semibold">Profile Photo</span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            value={photoURL}
-                                            onChange={(e) => setPhotoURL(e.target.value)}
-                                            onBlur={() => handleBlur('photoURL')}
-                                            placeholder="https://example.com/photo.jpg"
-                                            className={`input input-bordered w-full bg-slate-700 border-slate-600 text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
-                                                touched.photoURL && validationErrors.photoURL
-                                                    ? 'input-error'
-                                                    : ''
-                                            }`}
-                                        />
+                                        <div className="flex items-center gap-4">
+                                            {photoPreview && (
+                                                <img
+                                                    src={photoPreview}
+                                                    alt="Profile preview"
+                                                    className="h-16 w-16 rounded-full object-cover border-2 border-yellow-400"
+                                                />
+                                            )}
+                                            <input
+                                                type="file"
+                                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                                onChange={handlePhotoChange}
+                                                className="file-input file-input-bordered w-full bg-slate-700 border-slate-600 text-white file:bg-yellow-500 file:text-slate-900"
+                                            />
+                                        </div>
                                         <div className="label">
                                             <span className="label-text-alt text-slate-400 text-xs">
-                                                Must be a valid image URL (jpg, png, gif, webp)
+                                                JPG, PNG, WEBP, or GIF up to 5 MB
                                             </span>
                                         </div>
                                     </label>
