@@ -1,15 +1,19 @@
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { removePost } from '../utils/feedSlice';
 
 const UserCard = ({ user }) => {
     const [toastMessage, setToastMessage] = useState(null);
+    const dispatch = useDispatch();
     const sendConnectionRequest = async (userId, action) => {
         try {
             const response = await axios.post(`${BASE_URL}/request/send/${action}/${userId}`, {}, { withCredentials: true });
             console.log('Connection request sent successfully', response.data);
             if (response.data?.message) {
                 setToastMessage(`${response.data.message} with status ${action}`);
+                dispatch(removePost(userId));
             } else {
                 setToastMessage(`Request ${action}ed successfully`);
             }
