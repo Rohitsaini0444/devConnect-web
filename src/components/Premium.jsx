@@ -1,8 +1,26 @@
 import { PREMIUM_PLANS } from "../utils/constants";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { useState } from "react";
 
 const PremiumPlans = () => {
+  const [isPremium, setIsPremium] = useState(null);
+  const verifyPremium = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/payment/verify`,
+        { withCredentials: true }
+      );
+      if (response.data?.isPremium) {
+        setIsPremium(true);
+      } else {
+        setIsPremium(false);
+      }
+    } catch (error) {
+      console.error("Payment verification failed:", error.response?.data || error.message);
+    }
+  }
+
   const handlePlanSelect = async (planName) => {
     // Handle plan selection logic here
     const selectedPlan = PREMIUM_PLANS.find((plan) => plan.name === planName);
@@ -13,11 +31,34 @@ const PremiumPlans = () => {
     };
     const response = await axios.post(`${BASE_URL}/payment/create`, requestBody, { withCredentials: true });
     const data = response.data;
+    const options = {
+      key: data?.razorpayKey,
+      amount: data?.amount,
+      currency: 'INR',
+      name: 'DevConnect Premium',
+      description: `Payment for ${planName} plan`,
+      order_id: data?.id,
+      callback_url: 'http://localhost:3000/payment-success',
+      prefill: {
+        name: data?.notes?.name || '<name>',
+        email: data?.notes?.email || '<email>',
+        membershipType: data?.notes?.membershipType || '<membershipType>',
+        userId: data?.notes?.userId || '<userId>',
+      },
+      theme: {
+        color: '#F37254'
+      },
+      handler: () => {
+        verifyPremium();
+      }
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
     console.log("Payment response:", data);
   }
 
   return (
-    <section className="min-h-screen bg-base-200 px-4 py-12">
+    isPremium ? (<section className="min-h-screen bg-base-200 px-4 py-12">
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold">Upgrade Your Experience</h1>
@@ -79,8 +120,11 @@ const PremiumPlans = () => {
           ))}
         </div>
       </div>
-    </section>
-  );
+    </section>) : (<div className="flex flex-col items-center justify-center min-h-screen bg-base-200 px-4 py-12">
+      <h1 className="text-4xl font-bold mb-4">You are already a Premium Member!</h1>
+      <p className="text-base-content/60 mb-6">Enjoy your premium features and benefits.</p>
+    </div>)
+  )
 };
 
 export default PremiumPlans;
